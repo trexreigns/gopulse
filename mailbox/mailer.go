@@ -116,6 +116,9 @@ func (m *Mailer) registerHandler(event string) telemetry.EventRegistrar {
 func (m *Mailer) buildHandler() telemetry.HandleEventFunc {
 	return func(event string, measurement map[string]interface{}, metadata map[string]interface{}, config interface{}) {
 		// get the event mailbox
+		m.mu.Lock()
+		defer m.mu.Unlock()
+
 		mailbox, ok := m.mailbox[event]
 		if !ok {
 			mailbox = make([]MailData, 0)
